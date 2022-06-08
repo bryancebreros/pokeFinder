@@ -11,7 +11,7 @@ function PokemonSearch() {
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (text === ''){
-            setAlert('Please enter Pokémon name OR number', 'error')
+            setAlert('Please enter the Pokémon name OR number', 'error')
         } else {
             dispatch({type: 'SET_LOADING'})
             const pokemons = await searchPokemon(text)

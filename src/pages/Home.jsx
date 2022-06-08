@@ -1,10 +1,14 @@
-import PokemonResults from "../components/pokemons/PokemonResults"
 import PokemonSearch from "../components/pokemons/PokemonSearch"
+import PokemonResults from "../components/pokemons/PokemonResults"
+
+
 function Home() {
   return (
     <>
-      <PokemonSearch />
+      <PokemonSearch />     
+      
       <PokemonResults />
+      
     </>
   )
 }
