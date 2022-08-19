@@ -16,6 +16,13 @@ const pokedexReducer = (state, action) => {
                 ...state,
                 pokemons: [],
             }
+        case 'SHOW_POKEMON':
+            return{
+                ...state,
+                pokemon: action.payload.pokemon,
+                loading: false
+
+            }
         default:
             return state
     }

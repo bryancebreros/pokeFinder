@@ -5,8 +5,7 @@ import PokemonResults from "../components/pokemons/PokemonResults"
 function Home() {
   return (
     <>
-      <PokemonSearch />     
-      
+      <PokemonSearch />
       <PokemonResults />
       
     </>
