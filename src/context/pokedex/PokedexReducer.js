@@ -23,6 +23,7 @@ const pokedexReducer = (state, action) => {
                 loading: false
 
             }
+        
         default:
             return state
     }

@@ -12,7 +12,6 @@ function Pokemon() {
     useEffect(() => {
       dispatch({type: 'SET_LOADING'})
        const getPokemonData = async() => {
-        console.log('hi');
          const pokemonData = await showPokemon(params.name)
          dispatch({type: 'SHOW_POKEMON', payload: pokemonData})
 
@@ -29,7 +28,8 @@ function Pokemon() {
     const {
       name,
       id,
-      sprites
+      sprites,
+      types
       
     } = pokemon
     
@@ -54,10 +54,10 @@ function Pokemon() {
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-3 mb-8 md:gap-8">
-          <div className="custom-card-image mb-6 md:mb-0">
-            <div className="rounded-lg shadow-xl card image-full">
+          {/* <div className="custom-card-image mb-6 md:mb-0">
+            <div className="rounded-xl card image-full">
               <figure>
-                {/* <img src={sprites.front_default} alt="" /> */}
+                <img src={sprites.front_default} alt="" />
                 <img src={sprites?.other.home.front_default} alt={name}/>
               </figure>
               <div className="card-body justify-end">
@@ -65,6 +65,31 @@ function Pokemon() {
                   {name}
                 </h2>
                 <p className='flex-grow-0'>{`#${id}`}</p>
+              </div>
+            </div>
+          </div> */}
+          <div class="card w-96 bg-base-100 shadow-xl">
+          
+            <figure><button class="btn btn-square btn-sm flex-1 w-32">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+      </button><img src={sprites?.other.home.front_default} alt={name} /></figure>
+            
+            <div class="card-body">
+            
+              <h2 class="card-title">
+                {name}
+                <div class={`badge mr-2 px-2.5 py-0.5 rounded ${types?.[0].type.name}`}>{types?.[0].type.name}</div>
+                {types?.length > 1 &&
+                  <div class={`badge mr-2 px-2.5 py-0.5 rounded ${types?.[1].type.name}`}>{types?.[1].type.name}</div>
+                }
+                
+              </h2>
+              <p className='flex-grow-0'>{`#${id}`}</p>
+              
+              <div class="card-actions justify-end">
+              
+                <div class="badge badge-outline">Moves</div> 
+                <div class="badge badge-outline">Area</div>
               </div>
             </div>
           </div>

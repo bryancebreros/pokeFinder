@@ -2,6 +2,7 @@ import {useContext} from 'react'
 import Spinner from '../layouts/Spinner'
 import PokemonItem from '../pokemons/PokemonItem'
 import PokedexContext from '../../context/pokedex/PokedexContext'
+
 function PokemonResults() {
     const {pokemons, loading} = useContext(PokedexContext)
     
