@@ -1,4 +1,5 @@
 const pokedexReducer = (state, action) => {
+    // console.log(action.type === "GET_ID" ? action.payload.idForm : "");
     switch(action.type) {
         case 'GET_POKEMONS':
             return{
@@ -20,10 +21,27 @@ const pokedexReducer = (state, action) => {
             return{
                 ...state,
                 pokemon: action.payload.pokemon,
-                loading: false
+                loading: false,
 
             }
-        
+        case 'GET_ABILITIES':
+            return{
+                ...state,
+                abilities: [state.abilities, action.payload],
+                loading: false,
+            }
+        // case 'GET_FORMS':
+        //     return{
+        //         ...state,
+        //         forms: action.payload.forms,
+        //         loading: false,
+        //     }
+        // case 'GET_FORM':
+        //     return{
+        //         ...state,
+        //         formas: [...state.forms, action.payload],
+        //         loading: false,
+        //     }
         default:
             return state
     }

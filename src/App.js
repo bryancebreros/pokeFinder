@@ -14,7 +14,7 @@ function App() {
     
     <PokedexProvider>
       <AlertProvider>
-        <Router>
+      <Router>
           
           <div className="flex flex-col justify-between h-screen">
             <Navbar />
@@ -22,7 +22,7 @@ function App() {
               <Alert />
               <Routes>
                 <Route path='/' element={<Home />}></Route>
-                <Route path='/pokemon/:name' element={<Pokemon />}></Route>
+                <Route path='/pokemon/:entry' element={<Pokemon />}></Route>
                 <Route path='/about' element={<About />}></Route>
                 <Route path='/*' element={<NotFound />}></Route>
               </Routes>

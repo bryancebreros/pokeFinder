@@ -1,201 +1,288 @@
-import {useEffect, useContext, useRef} from 'react'
+import {useEffect, useContext, useState} from 'react'
 import { useParams, Link } from 'react-router-dom'
 import Spinner from '../components/layouts/Spinner'
 import { showPokemon} from '../context/pokedex/PokedexActions'
 import PokedexContext from '../context/pokedex/PokedexContext'
-
+import { FaAngleLeft, FaHashtag } from 'react-icons/fa'
+import Modal from "react-modal"
+import axios from 'axios'
+import useAbilitySearch from '../components/customHooks/useAbilitySearch'
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
+Modal.setAppElement("#root")
 function Pokemon() {
-    const { pokemon, loading, dispatch} = useContext(PokedexContext)
-    const isMounted = useRef(true)
-    const params = useParams()
+  const [habilidades, setHabilidades] = useState([])
+  const [showModal, setShowModal] = useState(false)
+  const [modalIsOpen, setIsOpen] = useState(false);
 
+  function openModal() {
+    setIsOpen(true);
+  }
+
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+    const { pokemon, loading, dispatch, forms, formas} = useContext(PokedexContext)
+    const params = useParams()
     useEffect(() => {
       dispatch({type: 'SET_LOADING'})
-       const getPokemonData = async() => {
-         const pokemonData = await showPokemon(params.name)
-         dispatch({type: 'SHOW_POKEMON', payload: pokemonData})
-
-       }
-       getPokemonData()
-    }, [dispatch, params.name])
-
-    useEffect(() =>{
-      return () => {
-        isMounted.current = false
+      const getPokemonData = async() => {
+        const pokemonData = await showPokemon(params.entry)
+        dispatch({type: 'SHOW_POKEMON', payload: pokemonData})
       }
-      
-    }, [])
+      getPokemonData()
+    }, [dispatch, params.entry])
     const {
       name,
       id,
       sprites,
-      types
-      
+      types,
+      abilities,
+      stats
     } = pokemon
+    // const pokeAbilities = abilities?.map((a) => a.ability.name)
+    // useEffect(() => {
+    //   dispatch({type: 'SET_LOADING'})
+    //   const getPokemonAbilities = async() => {
+    //     const pokemonAbilities = await getAbilities(pokeAbilities)
+    //     dispatch({type: 'GET_ABILITIES', payload: pokemonAbilities})
+    //   }
+    //   getPokemonAbilities()
+    // }, [dispatch, pokeAbilities])
+    // const {abilitiesDesc} = useAbilitySearch(pokeAbilities)
+    // console.log(abilitiesDesc);
+    // const [aaa] = useAbilitySearch(pokeAbilities)
+    // console.log(aaa);
+    // useEffect(() => {
+    //   dispatch({type: 'SET_LOADING'})
+    //   const getPokemonForms = async() => {
+    //     const pokemonForms = await getForms(params.entry)
+    //     dispatch({type: 'GET_FORMS', payload: pokemonForms})
+    //   }
+    //   getPokemonForms()
+      
+    // }, [dispatch, params.entry])
+    // useEffect(() => {
+    //   console.log("hi");
+    //   dispatch({type: 'SET_LOADING'})
+    //   const getFormId = async() => {
+    //     forms?.map(async (form)=> {
+    //       if(!form?.is_default){
+    //         console.log({form});
+    //         const formId = await getForm(form.pokemon.url)
+    //         dispatch({type: 'GET_FORM', payload: formId})
+    //       }
+         
+    //     })
+       
+    //   }
+    //   getFormId()
+      
+    // }, [dispatch, params.entry])
+    // console.log({formas});
+    // console.log({forms});
+
+
+
+    // async function fetchId(url) {
+    //   try {
+    //     const response = await axios.get(url);
+    //     setPokeId([...pokeId, {formId: response.data.id, formName: response.data.name}])
+    //   } catch (e) {
+    //     console.error(e)
+    //   }
+    // }  
+      
     
-   
-    
-    console.log(name);
-    
-    console.log('fin');
-    
-    
+    // useEffect(() => {
+      
+    //     forms.map((form) => {
+    //       const getPokemonId = async() => {
+    //         ids = await getForm("https://pokeapi.co/api/v2/pokemon-species/6")
+    //       }
+    //       getPokemonId()
+    //     })
+  
+    // }, [dispatch, params.entry])     
+    // console.log(ids);
+    const handleOpenModal = () => {
+      setShowModal(true)
+    }
+    const handleCloseModal = () => {
+      console.log({showModal});
+      setShowModal(false)
+      console.log({showModal});
+    }
+    const sum = stats?.reduce((acc, o) => acc + parseInt(o.base_stat), 0)
+    const colorStat = (baseStat) => {
+      if (baseStat < 51){
+        return 'progress-primary'
+      } else if (baseStat > 50 && baseStat < 100){
+        return 'progress-warning'
+      } else if (baseStat > 99 && baseStat < 130){
+        return 'progress-info'
+      } else {
+        return 'progress-secondary'
+      }
+    }
     if (loading) {
       return <Spinner />
     }
     
+    
   return (
     <>
-      <div className='w-full mx-auto lg:w-10/12'>
+    <div>
+      <button onClick={openModal}>Open Modal</button>
+      <Modal
+        isOpen={modalIsOpen}
+        
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <h2 >Hello</h2>
+                        <button onClick={closeModal}>close</button>
+                        <div>I am a modal</div>
+                        <form>
+                          <input />
+                          <button>tab navigation</button>
+                          <button>stays</button>
+                          <button>inside</button>
+                          <button>the modal</button>
+                        </form>
+      </Modal>
+    </div>
+    {/* Put this part before </body> tag */}
+    {/* <input type="checkbox" id="my-modal-3" className="modal-toggle" />
+    <div className="modal">
+      <div className="modal-box relative">
+        <label htmlFor="my-modal-3" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+        <h3 className="text-lg font-bold">Congratulations random Internet user!</h3>
+        <p className="py-4">You've been selected for a chance to get one year of subscription to use Wikipedia for free!</p>
+      </div>
+    </div> */}
+      <div className='w-full mx-auto lg:w-11/12'>
         <div className="mb-4">
           <Link to='/' className='btn btn-ghost'>
-            Back To Search
+          <FaAngleLeft icon="fa-solid fa-arrow-left" />Back
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-3 mb-8 md:gap-8">
-          {/* <div className="custom-card-image mb-6 md:mb-0">
-            <div className="rounded-xl card image-full">
-              <figure>
-                <img src={sprites.front_default} alt="" />
-                <img src={sprites?.other.home.front_default} alt={name}/>
-              </figure>
-              <div className="card-body justify-end">
-                <h2 className="card-title mb-0">
+        <div className="grid grid-cols-1 xl:grid-cols-2 lg:grid-cols-1 mb-8 md:gap-8">
+          <div className="card w-96 bg-base-100 shadow-xl">
+            <h2 className="btn btn-square btn-sm btn-disabled flex-1 w-auto mb-4"><FaHashtag />{(id+'').padStart(3,'0')}</h2>
+            <div className="card-body">
+              <h2 className="card-title text-3xl card-title">
                   {name}
-                </h2>
-                <p className='flex-grow-0'>{`#${id}`}</p>
-              </div>
-            </div>
-          </div> */}
-          <div class="card w-96 bg-base-100 shadow-xl">
-          
-            <figure><button class="btn btn-square btn-sm flex-1 w-32">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-      </button><img src={sprites?.other.home.front_default} alt={name} /></figure>
-            
-            <div class="card-body">
-            
-              <h2 class="card-title">
-                {name}
-                <div class={`badge mr-2 px-2.5 py-0.5 rounded ${types?.[0].type.name}`}>{types?.[0].type.name}</div>
-                {types?.length > 1 &&
-                  <div class={`badge mr-2 px-2.5 py-0.5 rounded ${types?.[1].type.name}`}>{types?.[1].type.name}</div>
-                }
-                
+                  <div className={`badge badge-info badge-lg text-white ${types?.[0].type.name}`}>{types?.[0].type.name}</div>
+                  {types?.length > 1 &&
+                    <div className={`badge badge-info badge-lg text-white ${types?.[1].type.name}`}>{types?.[1].type.name}</div>
+                  }
               </h2>
-              <p className='flex-grow-0'>{`#${id}`}</p>
-              
-              <div class="card-actions justify-end">
-              
-                <div class="badge badge-outline">Moves</div> 
-                <div class="badge badge-outline">Area</div>
+              <figure><img src={sprites?.other.home.front_default} alt={name} /></figure>
+            
+                  
+              <div className='w-full rounded-lg shadow-md bg-base-100 stats stats-vertical text-center'>
+                {abilities?.map((a) => (
+                  <label className='modal-button stat bg-gray-200 hover:bg-gray-400 cursor-pointer' onClick={openModal} key={a.ability.name}> 
+                  {a.is_hidden ? 
+                    <>
+                      <div className="stat-title">Hidden Ability</div>
+                      <p className=" flex-grow-0 text-lg stat-value">{a.ability.name}</p>
+                      
+                    </>
+                  :  
+                    <p  className="flex-grow-0 text-lg stat-value">{a.ability.name}</p>}
+                  </label>
+                ))}
               </div>
             </div>
-          </div>
-          <div className='col-span-2'>
-            <div className='mb-6'>
-              <h1 className='text-3xl card-title'>
-                {/* {abilities[0].ability.name} */}
-                {/* <div className='ml-2 mr-1 badge badge-success'>{type}</div>
-                {hireable && (
-                  <div className='mx-1 badge badge-info'>Hireable</div>
-                )} */}
-              </h1>
-              {/* <p>{bio}</p> */}
-              {/* <div className='mt-4 card-actions'>
-                <a
-                  href={html_url}
-                  target='_blank'
-                  rel='noreferrer'
-                  className='btn btn-outline'
-                >
-                  Visit Github Profile
-                </a>
-              </div> */}
-            </div>
+          
 
             <div className='w-full rounded-lg shadow-md bg-base-100 stats'>
-              {/* {location && (
-                <div className='stat'>
-                  <div className='stat-title text-md'>Location</div>
-                  <div className='text-lg stat-value'>{location}</div>
-                </div>
-              )} */}
-              {/* {blog && (
-                <div className='stat'>
-                  <div className='stat-title text-md'>Website</div>
-                  <div className='text-lg stat-value'>
-                    <a href={`https://${blog}`} target='_blank' rel='noreferrer'>
-                      {blog}
-                    </a>
-                  </div>
-                </div>
-              )} */}
-              {/* {twitter_username && (
-                <div className='stat'>
-                  <div className='stat-title text-md'>Twitter</div>
-                  <div className='text-lg stat-value'>
-                    <a
-                      href={`https://twitter.com/${twitter_username}`}
-                      target='_blank'
-                      rel='noreferrer'
-                    >
-                      {twitter_username}
-                    </a>
-                  </div>
-                </div>
-              )} */}
+              
             </div>
           </div>
+          <div className="overflow flex-end">
+              <table className="table w-24 lg:w-96">
+                  {/* <!-- head --> */}
+                  <thead>
+                  <tr>
+                      <th></th>
+                      <th className='text-xl'>Base Stats</th>
+                      <th></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {/* <!-- row 1 --> */}
+                  <tr>
+                      <th>HP:</th>
+                      <td>{stats?.[0].base_stat}</td>
+                      <td><progress className={`progress ${colorStat(stats?.[0].base_stat)} w-24 lg:w-96`} value={stats?.[0].base_stat} max="255"></progress></td>
+                      
+                  </tr>
+                  {/* <!-- row 2 --> */}
+                  <tr>
+                      <th>Attack:</th>
+                      <td>{stats?.[1].base_stat}</td>
+                      <td><progress className={`progress ${colorStat(stats?.[1].base_stat)} w-24 lg:w-96`} value={stats?.[1].base_stat} max="255"></progress></td>
+                      
+                  </tr>
+                  {/* <!-- row 3 --> */}
+                  <tr>
+                      <th>Defense:</th>
+                      <td>{stats?.[2].base_stat}</td>
+                      <td><progress className={`progress ${colorStat(stats?.[2].base_stat)} w-24 lg:w-96`} value={stats?.[2].base_stat} max="255"></progress></td>
+                      
+                  </tr>
+                  <tr>
+                      <th>Sp. Attack:</th>
+                      <td>{stats?.[3].base_stat}</td>
+                      <td><progress className={`progress ${colorStat(stats?.[3].base_stat)} w-24 lg:w-96`} value={stats?.[3].base_stat} max="255"></progress></td>
+                      
+                  </tr>
+                  <tr>
+                      <th>Sp. Defense:</th>
+                      <td>{stats?.[4].base_stat}</td>
+                      <td><progress className={`progress ${colorStat(stats?.[4].base_stat)} w-24 lg:w-96`} value={stats?.[4].base_stat} max="255"></progress></td>
+                      
+                  </tr>
+                  <tr>
+                      <th>Speed:</th>
+                      <td>{stats?.[5].base_stat}</td>
+                      <td><progress className={`progress ${colorStat(stats?.[5].base_stat)} w-24 lg:w-96`} value={stats?.[5].base_stat} max="255"></progress></td>
+                      
+                  </tr>
+                  </tbody>
+              </table>
+              <div className="stat">
+              <div className="stat-title">Total:</div>
+              <div className="stat-value text-primary">{sum}</div>
+          </div>
+          </div>
         </div>
-
-        {/* <div className='w-full py-5 mb-6 rounded-lg shadow-md bg-base-100 stats'>
-            <div className='grid grid-cols-1 md:grid-cols-3'>
-            <div className='stat'>
-                <div className='stat-figure text-secondary'>
-                <FaUsers className='text-3xl md:text-5xl' />
-                </div>
-                <div className='stat-title pr-5'>Followers</div>
-                <div className='stat-value pr-5 text-3xl md:text-4xl'>
-                {followers}
-                </div>
-            </div>
-
-            <div className='stat'>
-                <div className='stat-figure text-secondary'>
-                <FaUserFriends className='text-3xl md:text-5xl' />
-                </div>
-                <div className='stat-title pr-5'>Following</div>
-                <div className='stat-value pr-5 text-3xl md:text-4xl'>
-                {following}
-                </div>
-            </div>
-
-            <div className='stat'>
-                <div className='stat-figure text-secondary'>
-                <FaCodepen className='text-3xl md:text-5xl' />
-                </div>
-                <div className='stat-title pr-5'>Public Repos</div>
-                <div className='stat-value pr-5 text-3xl md:text-4xl'>
-                {public_repos}
-                </div>
-            </div>
-
-            <div className='stat'>
-                <div className='stat-figure text-secondary'>
-                <FaStore className='text-3xl md:text-5xl' />
-                </div>
-                <div className='stat-title pr-5'>Public Gists</div>
-                <div className='stat-value pr-5 text-3xl md:text-4xl'>
-                {public_gists}
-                </div>
-            </div>
-            </div>
+        {/* <div>
+          Pokemon
+          {formas.map((forma) =>{
+            
+            return(
+              <>
+                <h1>{forma.formName}</h1>
+                <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${forma.formId}.png`} />
+              </>
+            )
+          })}
         </div> */}
-
-        
-        
       </div>
     </>
 

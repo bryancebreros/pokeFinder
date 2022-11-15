@@ -1,35 +1,41 @@
 import PropTypes from 'prop-types'
-
-import { useContext, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import { showPokemon } from '../../context/pokedex/PokedexActions'
-import PokedexContext from '../../context/pokedex/PokedexContext'
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'
+import axios from 'axios'
 
 function capName(name) {
     return name.charAt(0).toUpperCase() + name.slice(1);
 }
-function PokemonItem({pokemon: {name}}){
+function PokemonItem({pokemon: {name, url}}){
+  //@TODO - try  refactor w/ custom hook
+  
+  const [poke, setPoke] = useState()
+  useEffect(() => {
+    axios.get(url).then((res) => {
+      setPoke(res.data)
+    })
+    // eslint-disable-next-line
+  }, [])
+  const entry = poke?.id
+  const icon = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${entry}.png`
+  // }).catch(e => {
+  //     if (axios.isCancel(e)) return
+  //     setError(true)
+  // })
+  // return () => cancel()
+  return (
     
-    return (
-        <div className='card shadow-md compact side bg-base-100'>
-        <div className="flex-row items-center space-x-4 card-body">
-        {/* <div>
-            <div className="avatar">
-                <div className="rounded-full shadow w-14 h-14">
-                    <img src={} alt={name} />
-                </div>
-            </div>
-        </div> */}
-        <Link to={`/pokemon/${name}`}>
-            <div>
-                <h2 className='card-title'>{capName(name)}</h2>
-                <h2>#d</h2>
-                
-            </div>
-        </Link>
-        </div>
-        </div>
-    )
+      <Link to={`/pokemon/${poke?.name}`}>
+          <div className={`card card-side bg-base-100 shadow-xl  group hover:bg-yellow-400`}>
+              <div className="card-bodyp-6 max-w-sm mx-auto  flex items-center space-x-6">
+                  <h2 className="card-title ">{capName(name)}</h2>
+                  <figure className='w-24 '>
+                    <img src={icon} alt={name} className='group-hover:-translate-y-2'/>
+                  </figure>
+              </div>
+          </div>
+      </Link>
+  )
 
 }
 

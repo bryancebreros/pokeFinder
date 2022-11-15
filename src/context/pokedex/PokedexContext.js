@@ -1,6 +1,6 @@
 import {createContext, useReducer, useEffect} from 'react'
 import pokedexReducer from './PokedexReducer'
-import { getPokedex } from './PokedexActions'
+import { getKanto } from './PokedexActions'
 
 const PokedexContext = createContext()
 
@@ -8,13 +8,16 @@ export const PokedexProvider = ({children}) => {
     const initialState = {
         pokemons: [],
         pokemon:{},
+        // forms: [],
+        // formas: [],
+        abilities: [],
         loading: false,
 
     }
     useEffect(() => {
         const getPokemon = async () => {
           dispatch({type: 'SET_LOADING'})
-          const pokemons = await getPokedex()
+          const pokemons = await getKanto()
           dispatch({type: 'GET_POKEMONS', payload: pokemons})
         }
         getPokemon()
